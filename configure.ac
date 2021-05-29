@@ -321,6 +321,11 @@ AC_ARG_WITH([dictionaries],
                  on this instance. Allowing too many has negative effect on startup performance. Default: de_DE en_GB
                  en_US es_ES fr_FR it nl pt_BR pt_PT ru.]))
 
+AC_ARG_ENABLE([freemium],
+              AS_HELP_STRING([--enable-freemium],
+                             [Enable freemium model.]))
+
+
 # Handle options
 AS_IF([test "$enable_debug" = yes -a -n "$with_poco_libs"],
       [POCO_DEBUG_SUFFIX=d],
@@ -1248,6 +1253,74 @@ if test -n "$with_dictionaries" -a "$with_dictionaries" != "no"; then
 else
     ALLOWED_LANGUAGES="de_DE en_GB en_US es_ES fr_FR it nl pt_BR pt_PT ru"
 fi
+
+AS_IF([test "$enable_freemium" = "yes"],
+      [AC_DEFINE([ENABLE_FREEMIUM],1,[Whether to compile and enable freemium mode])])
+
+DISABLED_COMMANDS=
+if test "$enable_freemium" = "yes"; then
+    DISABLED_COMMANDS=".uno:DataDataPilotRun .uno:RecalcPivotTable \
+    .uno:DeletePivotTable .uno:SamplingDialog .uno:DescriptiveStatisticsDialog \
+    .uno:AnalysisOfVarianceDialog .uno:CorrelationDialog .uno:CovarianceDialog \
+    .uno:ExponentialSmoothingDialog .uno:MovingAverageDialog .uno:RegressionDialog \
+    .uno:TTestDialog .uno:FTestDialog .uno:ZTestDialog .uno:ChiSquareTestDialog \
+    .uno:FourierAnalysisDialog .uno:Validation .uno:DataFilterSpecialFilter \
+    .uno:TrackChanges .uno:AcceptTrackedChanges .uno:InsertReferenceField .uno:Watermark \
+    .uno:InsertIndexesEntry .uno:InsertAuthoritiesEntry .uno:InsertMultiIndex \
+    .uno:SlideMasterPage downloadas-epub downloadas-rtf masterslidebutton"
+fi
+AC_DEFINE_UNQUOTED([DISABLED_COMMANDS],["$DISABLED_COMMANDS"],[Default value of freemium.disabled_commands])
+AC_SUBST(DISABLED_COMMANDS)
+
+PURCHASE_TITLE=
+if test "$enable_freemium" = "yes"; then
+    PURCHASE_TITLE="Unlock your potential"
+fi
+AC_DEFINE_UNQUOTED([PURCHASE_TITLE],["$PURCHASE_TITLE"],[Default value of freemium.purchase_title])
+AC_SUBST(PURCHASE_TITLE)
+
+PURCHASE_LINK=
+if test "$enable_freemium" = "yes"; then
+    PURCHASE_LINK="https://www.collaboraoffice.com/subscriptions/"
+fi
+AC_DEFINE_UNQUOTED([PURCHASE_LINK],["$PURCHASE_LINK"],[Default value of freemium.purchase_link])
+AC_SUBST(PURCHASE_LINK)
+
+PURCHASE_DISCRIPTION=
+if test "$enable_freemium" = "yes"; then
+    PURCHASE_DISCRIPTION="Head over to the subscription page and discover all the features:"
+fi
+AC_DEFINE_UNQUOTED([PURCHASE_DISCRIPTION],["$PURCHASE_DISCRIPTION"],[Default value of freemium.purchase_discription])
+AC_SUBST(PURCHASE_DISCRIPTION)
+
+WRITER_SUBSCRIPTION_HIGHLIGHTS=
+if test "$enable_freemium" = "yes"; then
+    WRITER_SUBSCRIPTION_HIGHLIGHTS="Review and read your writing with ease"
+fi
+AC_DEFINE_UNQUOTED([WRITER_SUBSCRIPTION_HIGHLIGHTS],["$WRITER_SUBSCRIPTION_HIGHLIGHTS"],[Default value of freemium.writer_subscription_highlights])
+AC_SUBST(WRITER_SUBSCRIPTION_HIGHLIGHTS)
+
+CALC_SUBSCRIPTION_HIGHLIGHTS=
+if test "$enable_freemium" = "yes"; then
+    CALC_SUBSCRIPTION_HIGHLIGHTS="Get a better picture of your data"
+fi
+AC_DEFINE_UNQUOTED([CALC_SUBSCRIPTION_HIGHLIGHTS],["$CALC_SUBSCRIPTION_HIGHLIGHTS"],[Default value of freemium.calc_subscription_highlights])
+AC_SUBST(CALC_SUBSCRIPTION_HIGHLIGHTS)
+
+IMPRESS_SUBSCRIPTION_HIGHLIGHTS=
+if test "$enable_freemium" = "yes"; then
+    IMPRESS_SUBSCRIPTION_HIGHLIGHTS="Nail your next presentation"
+fi
+AC_DEFINE_UNQUOTED([IMPRESS_SUBSCRIPTION_HIGHLIGHTS],["$IMPRESS_SUBSCRIPTION_HIGHLIGHTS"],[Default value of freemium.impress_subscription_highlights])
+AC_SUBST(IMPRESS_SUBSCRIPTION_HIGHLIGHTS)
+
+DRAW_SUBSCRIPTION_HIGHLIGHTS=
+if test "$enable_freemium" = "yes"; then
+    DRAW_SUBSCRIPTION_HIGHLIGHTS="Draw and get organized"
+fi
+AC_DEFINE_UNQUOTED([DRAW_SUBSCRIPTION_HIGHLIGHTS],["$DRAW_SUBSCRIPTION_HIGHLIGHTS"],[Default value of freemium.draw_subscription_highlights])
+AC_SUBST(DRAW_SUBSCRIPTION_HIGHLIGHTS)
+
 AC_MSG_RESULT([$ALLOWED_LANGUAGES])
 AC_SUBST(ALLOWED_LANGUAGES)
 
